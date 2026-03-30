@@ -86,7 +86,7 @@ Notaremos que al finalizar la ejecución aparecerá un nuevo archivo `gmon.out` 
 
 > **Nota:** La opción `-pg` agrega llamadas a rutinas especiales de profiling al inicio y al final de cada función, por lo que el binario resultante puede ejecutarse levemente más lento que sin esta opción.
 
-![Ejecución de los comandos mencionados](../Recursos/img/comandos.png)
+![Ejecución de los comandos mencionados](../Recursos/maca/img/comandos.png)
 
 
 ---
@@ -117,12 +117,20 @@ Los elementos de la tabla son:
 
 Además de esta tabla, gprof también provee una segunda tabla con datos similares donde podemos ver el tiempo gastado en cada función y sus funciones "hijas":
 
-![Tabla de tiempo por funciones "children" gprof](../Recursos/img/datos.png)
-
+![Tabla de tiempo por funciones "children" gprof](../Recursos/maca/img/datos.png)
+_Figura 1: Caso del procesador Intel(R) Core(TM) i3-8130U CPU @ 2.20GHz-16GB DDR4 3200MHz_
 Donde:
 - **self**: tiempo gastado en la función en sí misma.
 - **children**: tiempo total acumulado en sus funciones hijas.
 - **called**: número de veces que la función padre llamó a la hija / el total de veces que la función hija fue llamada.
+
+A continuación se muestran los resultados obtenidos con el mismo código pero diferentes procesadores, para comparar el impacto del hardware en el tiempo de ejecución:
+
+
+![Tabla de tiempo](../Recursos/marcos/img/datos.png)
+
+_Figura 2: Caso del procesador AMD Ryzen 5 1600AF @ 3.20GHz/3.60Ghz - 16GB DDR4 3200MHz_
+
 
 --- 
 ### Conclusiones del Time Profiling
