@@ -131,7 +131,7 @@ Se define una GDT con un descriptor de **código** y uno de **datos** con base d
 ### 5.2. Escritura en segmento de solo lectura
 El descriptor de datos está marcado como **read-only**. Intentar escribir debería generar una **excepción de protección general (#GP)** y, sin handler, terminar en **triple fault** y reinicio.
 
-**Nota:** QEMU no refleja correctamente la excepción (permite escritura). En hardware real, al bootear desde pendrive, la CPU se reinicia, confirmando el comportamiento esperado.
+> ⚠️ **Nota:** QEMU no refleja correctamente la excepción (permite escritura). En hardware real, al bootear desde pendrive, la CPU se reinicia, confirmando el comportamiento esperado.
 
 ### 5.3. ¿Qué valor se carga en los registros de segmento?
 Se cargan **selectores** que apuntan a entradas de la GDT. En este caso:
