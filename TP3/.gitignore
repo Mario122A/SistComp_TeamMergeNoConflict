@@ -1,0 +1,7 @@
+build/
+*.log
+*.tmp
+*.bak
+*.swp
+*.DS_Store
+*.gdb_history
