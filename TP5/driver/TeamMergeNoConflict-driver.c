@@ -27,41 +27,33 @@ static int my_close(struct inode *i, struct file *f)
 
 static ssize_t my_read(struct file *f, char __user *buf, size_t len, loff_t *off)
 {
-    char kbuf[1];
+    char val;
 
-    
     if (curr_signal == '1') {
-        // Genera una onda cuadrada de 1 Hz
-        kbuf[0] = ((jiffies / HZ) % 2) ? '1' : '0';
+        val = ((jiffies / HZ) % 2) ? '1' : '0';
     } else if (curr_signal == '2') {
-        // Genera una onda cuadrada del doble de velocidad (2 Hz)
-        kbuf[0] = ((jiffies / (HZ / 2)) % 2) ? '1' : '0';
+        val = ((jiffies / (HZ / 2)) % 2) ? '1' : '0';
     } else {
         return -EINVAL;
     }
 
-    if (copy_to_user(buf, kbuf, 1))
-        return -EINVAL;
-
-    return 1;
+    return simple_read_from_buffer(buf, len, off, &val, 1);
 }
 
 static ssize_t my_write(struct file *f, const char __user *buf, size_t len, loff_t *off)
 {
-    char kbuf;
+    char kbuf[2] = {0};
+    ssize_t ret;
 
-    if (len != 1)
+    ret = simple_write_to_buffer(kbuf, sizeof(kbuf) - 1, off, buf, len);
+    if (ret < 0)
+        return ret;
+
+    if (kbuf[0] != '1' && kbuf[0] != '2')
         return -EINVAL;
 
-    if (copy_from_user(&kbuf, buf, 1))
-        return -EFAULT;
-
-    // Se ajusta para recibir '1' o '2' desde las peticiones POST de Flask
-    if (kbuf != '1' && kbuf != '2')
-        return -EINVAL;
-
-    curr_signal = kbuf;
-    return len;
+    curr_signal = kbuf[0];
+    return ret;
 }
 
 static struct file_operations dev_fops = {
@@ -90,7 +82,7 @@ static int __init teammergenoconflict_init(void)
         goto fail_cdev;
     }
 
-    cl = class_create(CLASS_NAME);
+    cl = class_create(THIS_MODULE, CLASS_NAME);
     if (IS_ERR(cl)) {
         ret = PTR_ERR(cl);
         pr_err("TeamMergeNoConflict: Failed to create device class\n");
